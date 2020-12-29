@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\incoices_details;
 use App\Models\invoice_attachments;
 use App\Models\invoices;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Notifications\Notifiable;
 use File;
 
 class IncoicesDetailsController extends Controller
@@ -19,7 +22,7 @@ class IncoicesDetailsController extends Controller
      */
     public function index()
     {
-        //
+        return view('/notyall');
     }
 
     /**
@@ -58,23 +61,24 @@ class IncoicesDetailsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\incoices_details  $incoices_details
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id,$idnet)
     {
         $invoices = invoices::where('id',$id)->first();
         $details  = incoices_Details::where('id_Invoice',$id)->get();
         $attachments  = invoice_attachments::where('invoice_id',$id)->get();
 
-        $userUnreadNotification= auth()->user()->unreadNotifications;
 
-        if($userUnreadNotification) {
-            $userUnreadNotification->where('id', $id)->markAsRead();
-           
-        }
+        //dd($id, auth()->user()->unreadNotifications);
+
+       $r= auth()->user()->unreadNotifications->where('id','=', $idnet);
+       $r->markAsRead();
+
 
         return view('invoices.details_invoice',compact('invoices','details','attachments'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -94,7 +98,7 @@ class IncoicesDetailsController extends Controller
      * @param  \App\Models\incoices_details  $incoices_details
      * @return \Illuminate\Http\Response
      */
-   
+
         public function destroy(Request $request)
     {
         $invoices = invoice_attachments::findOrFail($request->id_file);
@@ -103,7 +107,7 @@ class IncoicesDetailsController extends Controller
         session()->flash('delete', 'تم حذف المرفق بنجاح');
         return back();
     }
-    
+
     public function get_file($invoice_number,$file_name)
 
     {

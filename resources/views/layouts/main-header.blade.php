@@ -16,18 +16,18 @@
                 <a class="open-toggle" href="#"><i class="header-icon fe fe-align-left"></i></a>
                 <a class="close-toggle" href="#"><i class="header-icons fe fe-x"></i></a>
             </div>
-           
+
         </div>
         <div class="main-header-right">
             <ul class="nav">
                 <li class="">
-                   
+
 
                 </li>
             </ul>
             <div class="nav nav-item  navbar-nav-right ml-auto">
-               
-              
+
+
             @can('الاشعارات')
                     <div class="dropdown nav-item main-header-notification">
                         <a class="new nav-link" href="#">
@@ -36,8 +36,12 @@
                                 class="feather feather-bell">
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg><span class=" pulse"></span></a>
-                        <div class="dropdown-menu">
+                                @if(auth()->user()->unreadNotifications->count() > 0)
+                            </svg><span  class=" pulse"></span></a>
+                                @else
+
+                                     @endif
+                        <div class="dropdown-menu ">
                             <div class="menu-header-content bg-primary text-right">
                                 <div class="d-flex">
                                     <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">الاشعارات</h6>
@@ -46,31 +50,37 @@
                                 </div>
                                 <p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">
                                 <h6 style="color: yellow" id="notifications_count">عدد الاشعارات الغير مقروئه
-                                   <h3> {{ auth()->user()->unreadNotifications->count() }}</h3>
+                                   <h3 id="countNotifications"> {{ auth()->user()->unreadNotifications->count() }}</h3>
                                 </h6>
                                 </p>
-                              
+
                             </div>
                             <div id="unreadNotifications">
-                                @foreach (auth()->user()->unreadNotifications as $notification)
-                                    <div class="main-notification-list Notification-scroll">
+                                @foreach (auth()->user()->unreadNotifications->take(3) as $notification)
+                                    <div class="main-notification-list Notification-scroll" >
                                         <a class="d-flex p-3 border-bottom"
-                                            href="{{ url('InvoicesDetails') }}/{{ $notification->data['id'] }}">
+                                            href="{{ url('InvoicesDetails') }}/{{ $notification->data['id'] }}/{{$notification->id}}">
                                             <div class="notifyimg bg-pink">
-                                                <i class="la la-file-alt text-white"></i>
+                                                <i class="la la-file-alt text-white "></i>
                                             </div>
-                                            <div class="mr-3">
+                                            <div class="mr-3 ">
                                                 <h5 class="notification-label mb-1">{{ $notification->data['title'] }}
                                                     {{ $notification->data['user'] }}
-                                                   
+
                                                 </h5>
-                                               
+
                                                 <div class="notification-subtext">{{ $notification->created_at }}</div>
                                             </div>
                                         </a>
                                     </div>
-                                @endforeach
 
+
+                                @endforeach
+                                    @if(auth()->user()->unreadNotifications->count() > 3)
+                                 <center><h5><a href="/notyall">عرض الكل</a></h5></center>
+                                    @else
+
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -98,7 +108,7 @@
                                 </div>
                             </div>
                         </div>
-                      
+
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i
                                 class="bx bx-log-out"></i>تسجيل خروج</a>
@@ -108,7 +118,7 @@
 
                     </div>
                 </div>
-             
+
             </div>
         </div>
     </div>

@@ -34,7 +34,9 @@ Route::resource('InvoiceAttachments', 'InvoiceAttachmentsController');
 
 Route::get('/section/{id}', 'InvoicesController@getproducts');
 
-Route::get('/InvoicesDetails/{id}', 'IncoicesDetailsController@edit');
+Route::get('/InvoicesDetails/{id}/{idnet}', 'IncoicesDetailsController@edit','test');
+
+Route::get('/notyall', 'IncoicesDetailsController@index','test');
 
 Route::get('download/{invoice_number}/{file_name}', 'IncoicesDetailsController@get_file');
 
